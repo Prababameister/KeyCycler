@@ -1,4 +1,8 @@
-#include <exception>
+#include "keyboard.hh"
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+
 #include <json/json.h>
 #include <json/reader.h>
 #include <json/value.h>
@@ -7,9 +11,11 @@
 #include <fstream>
 #include <filesystem>
 
-#include <cycle.hh>
+#include <cycle_list.hh>
+#include <qqml.h>
+#include <vector>
 
-std::vector<Cycle> cycles;
+CycleList cycleList;
 
 int init_backend() {
     std::ifstream file(CONFIG_DIR "/cycles.json");
@@ -36,13 +42,19 @@ int init_backend() {
     }
 
     Json::Value raw_cycles = root["cycles"];
-    cycles.resize(raw_cycles.size());
     for (int i = 0; i < raw_cycles.size(); ++i) {
-        for (int j = 0; j < raw_cycles[i]["keyboards"].size(); ++j) {
-            Json::Value& kb = raw_cycles[i]["keyboards"][j];
-            cycles[i].add_keyboard(kb["full"].asString(), kb["abbrev"].asString());
+        int kbListSize = raw_cycles[i]["keyboards"].size();
+
+        Cycle* cyc = new Cycle{};
+        for (int j = 0; j < kbListSize; ++j) {
+            Json::Value& raw_kb = raw_cycles[i]["keyboards"][j];
+            Keyboard* kb = new Keyboard{};
+            kb->setFull(QString::fromStdString(raw_kb["full"].asString()));
+            kb->setAbbrev(QString::fromStdString(raw_kb["abbrev"].asString()));
+            cyc->addKb(kb);
         }
-        cycles[i].set_current(raw_cycles[i]["current_kb"].asInt());
+        cyc->setCurrent(raw_cycles[i]["current_kb"].asInt());
+        cycleList.addCycle(cyc);
     }
 
     return 0;
@@ -52,19 +64,13 @@ int main(int argc, char *argv[]) {
     // Init sequence
     std::cout << init_backend();
 
-    for (Cycle& cyc : cycles) {
-        std::cout << "Current kb: " << cyc.get_current() << "\n";
-        for(int i = 0; i < cyc.get_cycle_size(); ++i) {
-            Cycle::Keyboard* kb = cyc.get_keyboard_layout(i);
-            std::cout << "KB " << i << ": " << kb->abbrev << " - " << kb->full << "\n";
-        }
-    }
+    QGuiApplication app(argc, argv);
 
-    // QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("cycleList", &cycleList);
 
-    // QQmlApplicationEngine engine;
-    // const QUrl url(QStringLiteral(PROJECT_HEAD "/qml/main.qml"));
-    // engine.load(url);
+    const QUrl url(QStringLiteral(PROJECT_HEAD "/qml/main.qml"));
+    engine.load(url);
 
-    // return app.exec();
+    return app.exec();
 }

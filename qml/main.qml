@@ -11,6 +11,10 @@ Window {
         anchors.centerIn: parent
     }
 
+    Text {
+        text: cycleList.current
+    }
+
     Rectangle {
         id: bottombar
         anchors {

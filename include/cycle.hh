@@ -1,45 +1,36 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include <QObject>
+#include <QList>
 
-class Cycle {
+#include <keyboard.hh>
+
+class Cycle : public QObject {
+	Q_OBJECT
+	Q_PROPERTY(int current READ current WRITE setCurrent NOTIFY currentChanged)
+	Q_PROPERTY(QList<Keyboard*> kbList READ kbList WRITE setKbList NOTIFY kbListChanged)
+
     public:
-        struct Keyboard {
-            std::string full;
-            std::string abbrev;
-        };
+        explicit Cycle(QObject* parent = nullptr);
 
-        int get_cycle_size() {
-            return keyboard_list.size();
-        }
+        int current();
+        const QList<Keyboard*>& kbList();
 
-        Keyboard* get_keyboard_layout(int ind) {
-            return &keyboard_list[ind];
-        }
+        Q_INVOKABLE int getCycleSize();
+        Q_INVOKABLE Keyboard* getKb(int index);
 
-        void add_keyboard(std::string full, std::string abbrev) {
-            keyboard_list.push_back(Keyboard{full, abbrev});
-        }
-        void remove_keyboard(int ind) {
-            keyboard_list.erase(keyboard_list.begin() + ind);
-        }
+    public slots:
+        void setCurrent(int current);
+        void setKbList(QList<Keyboard*>& kbList);
 
-        // Setting current keyboard
-        int get_current() {
-            return current;
-        }
+        Q_INVOKABLE void addKb(Keyboard* kb);
+        Q_INVOKABLE void removeKb(int index);
 
-        void set_current(int new_cur) {
-            current = new_cur;
-        }
-
-        void apply_current() {
-            std::string command = "setxkbmap -layout " + keyboard_list[current].abbrev;
-            system(command.c_str());
-        }
+    signals:
+        void currentChanged();
+        void kbListChanged();
 
     private:
-        int current = 0;
-        std::vector<Keyboard> keyboard_list;
+        int m_current = -1;
+        QList<Keyboard*> m_kbList;
 };
