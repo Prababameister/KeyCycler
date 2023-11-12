@@ -32,6 +32,3 @@ void CycleList::addCycle(Cycle* cycle) {
 void CycleList::removeCycle(int index) {
     m_cycleList.removeAt(index);
 }
-
-void CycleList::currentChanged() {};
-void CycleList::cycleListChanged() {};

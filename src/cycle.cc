@@ -32,6 +32,3 @@ void Cycle::addKb(Keyboard* kb) {
 void Cycle::removeKb(int index) {
     m_kbList.removeAt(index);
 }
-
-void Cycle::currentChanged() {};
-void Cycle::kbListChanged() {};

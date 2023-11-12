@@ -12,8 +12,6 @@
 #include <filesystem>
 
 #include <cycle_list.hh>
-#include <qqml.h>
-#include <vector>
 
 CycleList cycleList;
 

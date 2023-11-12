@@ -22,9 +22,32 @@ endif()
 
 add_subdirectory(src)
 
+set(SOURCES
+    ${PROJECT_HEAD}/src/keyboard.cc
+    ${PROJECT_HEAD}/src/cycle_list.cc
+    ${PROJECT_HEAD}/src/cycle.cc
+)
+
+set(HEADERS
+    ${PROJECT_HEAD}/include/keyboard.hh
+    ${PROJECT_HEAD}/include/cycle_list.hh
+    ${PROJECT_HEAD}/include/cycle.hh
+)
+
+# Qt6 Library
+find_package(Qt6 6.2 COMPONENTS Core Quick Gui REQUIRED)
+# Jsoncpp for persistent storage
+find_package(jsoncpp REQUIRED)
+
+qt_add_executable(keycycler
+    ${PROJECT_HEAD}/src/main.cc
+    ${SOURCES}
+    ${HEADERS}
+)
+
 target_include_directories(
   keycycler
   PRIVATE include
 )
 
-target_link_libraries(keycycler)
+target_link_libraries(keycycler PRIVATE Qt6::Gui Qt6::Quick jsoncpp_lib)

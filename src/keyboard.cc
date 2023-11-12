@@ -15,6 +15,3 @@ void Keyboard::setFull(QString full) {
 void Keyboard::setAbbrev(QString abbrev) {
     m_abbrev = abbrev;
 }
-
-void Keyboard::fullChanged() {};
-void Keyboard::abbrevChanged() {};

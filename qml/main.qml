@@ -6,9 +6,14 @@ Window {
     id: root
     visible: true
     title: "Kill yourself"
-    Text {
-        text: "Hello, world!"
-        anchors.centerIn: parent
+
+    Component.onCompleted: {
+        if (Qt.binding(function() { return cycleList; })) {
+            console.log("myContextProperty exists and is not null!");
+            // Perform actions using myContextProperty
+        } else {
+            console.log("myContextProperty does not exist or is null.");
+        }
     }
 
     Text {
@@ -24,16 +29,5 @@ Window {
         }
         color: "green"
         height: parent.height / 12
-    }
-
-    RowLayout {
-        Button {
-            text: "Ok"
-            onClicked: model.submit()
-        }
-        Button {
-            text: "Cancel"
-            onClicked: model.revert()
-        }
     }
 }
