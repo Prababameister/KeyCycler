@@ -2,32 +2,20 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Window {
+ApplicationWindow {
     id: root
     visible: true
     title: "Kill yourself"
-
-    Component.onCompleted: {
-        if (Qt.binding(function() { return cycleList; })) {
-            console.log("myContextProperty exists and is not null!");
-            // Perform actions using myContextProperty
-        } else {
-            console.log("myContextProperty does not exist or is null.");
-        }
-    }
 
     Text {
         text: cycleList.current
     }
 
-    Rectangle {
-        id: bottombar
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
+    Loader {
+        id: cycle_list
+        source: "CycleDisplay.qml"
+        onLoaded: {
+            item.cycle = cycleList.getCycle(0);
         }
-        color: "green"
-        height: parent.height / 12
     }
 }

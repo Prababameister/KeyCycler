@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.18)
 
 project(keycycler VERSION 1.0 LANGUAGES CXX)
 
+include(FetchContent)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,8 +21,6 @@ if(NOT DEFINED Qt6_DIR)
     message(STATUS "Using preferred your preferred Qt Path at: $ENV{PREFERRED_QT_PATH}")
   endif()
 endif()
-
-add_subdirectory(src)
 
 set(SOURCES
     ${PROJECT_HEAD}/src/keyboard.cc

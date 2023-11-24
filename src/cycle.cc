@@ -28,7 +28,13 @@ void Cycle::setKbList(QList<Keyboard*>& kbList) {
 
 void Cycle::addKb(Keyboard* kb) {
     m_kbList.append(kb);
+    emit kbListChanged();
 }
 void Cycle::removeKb(int index) {
     m_kbList.removeAt(index);
+}
+
+void Cycle::applyCurrent() {
+    std::string command = "setxkbmap " + m_kbList[m_current]->abbrev().toStdString();
+    system(command.c_str());
 }

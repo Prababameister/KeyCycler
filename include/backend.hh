@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <regex>
 
 #include <json/json.h>
 #include <json/reader.h>
@@ -17,6 +18,8 @@ class Backend {
 
         void retrieveCycles(CycleList& cycleList, std::string path);
         void saveCycles(CycleList& cycleList, std::string path);
+
+        void retrieveKbLayouts(Cycle& masterCycle, std::string path);
 
         bool exists(std::string path);
     private:

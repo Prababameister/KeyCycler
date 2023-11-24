@@ -1,5 +1,6 @@
 #include <backend.hh>
-#include <json/value.h>
+#include <regex>
+#include <string>
 
 Backend::Backend() {
     reader = builder.newCharReader();
@@ -7,7 +8,8 @@ Backend::Backend() {
 
 void Backend::retrieveCycles(CycleList &cycleList, std::string path) {
     Json::Value root;
-    file.open(path.c_str());
+
+    file.open(path.c_str(), std::ios::in);
 
     std::string errs;
     if(!Json::parseFromStream(builder, file, &root, &errs)) {
@@ -70,7 +72,43 @@ void Backend::saveCycles(CycleList &cycleList, std::string path) {
     file.close();
 }
 
+
+void Backend::retrieveKbLayouts(Cycle& masterCycle, std::string path) {
+    bool reachedLayouts = false;
+    file.open(path);
+
+    std::string line;
+
+    std::regex kb_desc(R"(^\s{2}([a-zA-Z]+)\s+(.+)$)");
+    while(std::getline(file, line)) {
+        if (line == "! layout") {
+            reachedLayouts = true;
+            continue;
+        }
+        if (reachedLayouts && line == "! variant")
+            break;
+        if (!reachedLayouts)
+            continue;
+
+        std::smatch match;
+        if(std::regex_match(line, match, kb_desc)) {
+            if(match.size() == 3) {
+                std::string abbrev = match[1].str();
+                std::string full = match[2].str();
+                Keyboard* kb = new Keyboard();
+                kb->setAbbrev(QString::fromStdString(abbrev));
+                kb->setFull(QString::fromStdString(full));
+
+                masterCycle.addKb(kb);
+            }
+        }
+    }
+    file.close();
+}
+
 bool Backend::exists(std::string path) {
     file.open(path.c_str());
-    return file.is_open();
+    bool result = file.is_open();
+    file.close();
+    return result;
 }

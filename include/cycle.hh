@@ -26,6 +26,8 @@ class Cycle : public QObject {
         Q_INVOKABLE void addKb(Keyboard* kb);
         Q_INVOKABLE void removeKb(int index);
 
+        Q_INVOKABLE void applyCurrent();
+
     signals:
         void currentChanged();
         void kbListChanged();
