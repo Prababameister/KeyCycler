@@ -26,8 +26,12 @@ void CycleList::setCycleList(QList<Cycle*> &cycleList) {
     m_cycleList = cycleList;
 }
 
-void CycleList::addCycle(Cycle* cycle) {
-    m_cycleList.push_back(cycle);
+void CycleList::addCycle() {
+    Cycle* cyc = new Cycle();
+    m_cycleList.push_back(cyc);
+}
+void CycleList::addCycle(Cycle* cyc) {
+    m_cycleList.push_back(cyc);
 }
 void CycleList::removeCycle(int index) {
     m_cycleList.removeAt(index);

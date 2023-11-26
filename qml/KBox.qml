@@ -3,31 +3,40 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Rectangle {
-    id: keyboard_box
+    id: kbox
 
     width: 200
     height: 200
 
-    property string display_name: "Keyboard Name"
-    property int display_index: -1
-
-    property int kb_index: -1
+    property string nameDisplay: "Keyboard Name"
+    property int cycleIndex: -1
 
     color: "grey"
 
     Column {
         Text {
-            text: display_name
+            text: nameDisplay
             font.family: "Helvetica"
             font.pointSize: 16
             color: "black"
         }
 
         Text {
-            text: display_index
+            text: cycleIndex
             font.family: "Helvetica"
             font.pointSize: 24
             color: "black"
+        }
+
+        Button {
+            id: removeKbButton
+            text: "Remove"
+
+            signal removeKbSignal()
+
+            onClicked: {
+                removeKbSignal();
+            }
         }
     }
 }

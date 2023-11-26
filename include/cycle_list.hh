@@ -23,6 +23,7 @@ class CycleList : public QObject {
         void setCurrent(int current);
         void setCycleList(QList<Cycle*>& kbList);
 
+        Q_INVOKABLE void addCycle();
         Q_INVOKABLE void addCycle(Cycle* cycle);
         Q_INVOKABLE void removeCycle(int index);
 

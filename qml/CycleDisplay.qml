@@ -6,7 +6,7 @@ RowLayout {
     property var cycle
 
     Repeater {
-        id: repeaterModel
+        id: kbRepeater
         model: cycle.getCycleSize()
 
         delegate: Item {
@@ -18,47 +18,39 @@ RowLayout {
                 source: "KBox.qml"
                 onLoaded: {
                     if(item) {
-                        item.display_name = cycle.getKb(index).full;
-                        item.display_index = index;
+                        item.nameDisplay = cycle.getKb(index).full;
+                        item.cycleIndex = index;
                     }
                 }
             }
 
             Connections {
-                target: add_button
+                target: addKbButton
 
-                function onButtonSignal() {
-                    repeaterModel.model = cycle.getCycleSize()
+                function onAddKbSignal() {
+                    kbRepeater.model = cycle.getCycleSize();
                 }
             }
         }
     }
 
     ComboBox {
-        id: keyboard_select
+        id: keyboardDD
 
         width: 200
         model: kbList.kbList
         textRole: "full"
     }
 
-    Text {
-        text: cycle.getCycleSize()
-    }
-
     Button {
-        id: "add_button"
+        id: addKbButton
         text: "Add"
 
-        signal buttonSignal()
+        signal addKbSignal()
 
         onClicked: {
-            cycle.addKb(kbList.getKb(keyboard_select.currentIndex));
-            buttonSignal()
+            cycle.addKb(kbList.getKb(keyboardDD.currentIndex));
+            addKbSignal();
         }
-    }
-
-    Connections {
-        target: cycle
     }
 }

@@ -12,10 +12,7 @@ ApplicationWindow {
     }
 
     Loader {
-        id: cycle_list
-        source: "CycleDisplay.qml"
-        onLoaded: {
-            item.cycle = cycleList.getCycle(0);
-        }
+        id: cycleListDisplayLoader
+        source: "CycleListDisplay.qml"
     }
 }

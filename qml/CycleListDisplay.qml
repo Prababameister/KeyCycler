@@ -3,43 +3,42 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 
-RowLayout {
-    id: layout
-    spacing: 3
-
-    property var cycleList
-    property var kbList
+ColumnLayout {
+    id: cyclesLayout
+    spacing: 200
 
     Repeater {
+        id: cycleRepeater
         model: cycleList.getCycleListSize()
 
         delegate: Item {
-            ComboBox {
-                id: "keyboard_select"
-
-                width: 200
-                model: kbList.kbList
-
-                textRole: "full"
-            }
-
             Loader {
-                id: cycle
+                id: cycleLoader
                 source: "CycleDisplay.qml"
                 onLoaded: {
-                    item.kbList = cycleList.getCycle(index)
+                    item.cycle = cycleList.getCycle(index);
                 }
             }
 
-            Button {
-                id: "add_button"
-                text: "Add"
+            Connections {
+                target: addCycleButton
 
-                onClicked: {
-                    kbList.setCurrent(keyboard_select.currentIndex);
-                    kbList.applyCurrent();
+                function onAddCycleSignal() {
+                    cycleRepeater.model = cycleList.getCycleListSize();
                 }
             }
+        }
+    }
+
+    Button {
+        id: addCycleButton
+        text: "Add Cycle"
+
+        signal addCycleSignal()
+
+        onClicked: {
+            cycleList.addCycle();
+            addCycleSignal();
         }
     }
 }
