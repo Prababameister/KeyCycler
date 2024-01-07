@@ -15,10 +15,13 @@ add_definitions( -DPROJECT_HEAD="${PROJECT_HEAD}" )
 
 add_definitions( -DCONFIG_DIR="${CONFIG_DIR}" )
 
-if(NOT DEFINED Qt6_DIR)
+if(Qt6_DIR STREQUAL "Qt6_DIR-NOTFOUND")
+  message(STATUS ${Qt6_DIR})
   if(DEFINED ENV{PREFERRED_QT_PATH})
     set(Qt6_DIR "$ENV{PREFERRED_QT_PATH}")
     message(STATUS "Using preferred your preferred Qt Path at: $ENV{PREFERRED_QT_PATH}")
+  else()
+    message(STATUS "Could not find this path :(")
   endif()
 endif()
 
@@ -37,9 +40,22 @@ set(HEADERS
 )
 
 # Qt6 Library
-find_package(Qt6 6.2 COMPONENTS Core Quick Gui REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick Gui REQUIRED)
+
 # Jsoncpp for persistent storage
-find_package(jsoncpp REQUIRED)
+FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git 
+    GIT_TAG        master
+)
+
+FetchContent_GetProperties(jsoncpp)
+if (NOT jsoncpp_POPULATED)
+    FetchContent_Populate(jsoncpp)
+    add_subdirectory(${jsoncpp_SOURCE_DIR} ${jsoncpp_BINARY_DIR})
+endif ()
+
+qt_standard_project_setup()
 
 qt_add_executable(keycycler
     ${PROJECT_HEAD}/src/main.cc
