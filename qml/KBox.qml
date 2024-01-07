@@ -35,7 +35,8 @@ Rectangle {
             signal removeKbSignal()
 
             onClicked: {
-                removeKbSignal();
+                cycle.removeKb(cycleIndex);
+                kbRepeater.model = cycle.getCycleSize();
             }
         }
     }

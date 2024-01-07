@@ -28,7 +28,6 @@ int main(int argc, char *argv[]) {
         file.close();
     }
 
-    std::cout << CONFIG_DIR << " here\n";
     back.retrieveCycles(cycleList, CONFIG_DIR "/cycles.json");
     back.retrieveKbLayouts(masterCycle, "/usr/share/X11/xkb/rules/evdev.lst");
 

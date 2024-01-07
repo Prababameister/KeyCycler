@@ -17,14 +17,7 @@ ColumnLayout {
                 source: "CycleDisplay.qml"
                 onLoaded: {
                     item.cycle = cycleList.getCycle(index);
-                }
-            }
-
-            Connections {
-                target: addCycleButton
-
-                function onAddCycleSignal() {
-                    cycleRepeater.model = cycleList.getCycleListSize();
+                    item.i = index;
                 }
             }
         }
@@ -38,7 +31,7 @@ ColumnLayout {
 
         onClicked: {
             cycleList.addCycle();
-            addCycleSignal();
+            cycleRepeater.model = cycleList.getCycleListSize();
         }
     }
 }

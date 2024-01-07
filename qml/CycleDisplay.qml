@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 RowLayout {
     property var cycle
+    property var i
 
     Repeater {
         id: kbRepeater
@@ -23,14 +24,6 @@ RowLayout {
                     }
                 }
             }
-
-            Connections {
-                target: addKbButton
-
-                function onAddKbSignal() {
-                    kbRepeater.model = cycle.getCycleSize();
-                }
-            }
         }
     }
 
@@ -46,11 +39,19 @@ RowLayout {
         id: addKbButton
         text: "Add"
 
-        signal addKbSignal()
-
         onClicked: {
             cycle.addKb(kbList.getKb(keyboardDD.currentIndex));
-            addKbSignal();
+            kbRepeater.model = cycle.getCycleSize();
+        }
+    }
+
+    Button {
+        id: removeCycleButton
+        text: "Remove Cycle"
+
+        onClicked: {
+            cycleList.removeCycle(i);
+            cycleRepeater.model = cycleList.getCycleListSize();
         }
     }
 }
