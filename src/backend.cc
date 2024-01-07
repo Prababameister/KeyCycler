@@ -1,5 +1,6 @@
 #include <backend.hh>
 #include <regex>
+#include <stdexcept>
 #include <string>
 
 Backend::Backend() {
@@ -74,13 +75,23 @@ void Backend::saveCycles(CycleList &cycleList, std::string path) {
 
 
 void Backend::retrieveKbLayouts(Cycle& masterCycle, std::string path) {
+    std::cout << "here in retrieve Kb\n";
     bool reachedLayouts = false;
-    file.open(path);
+
+    std::string command = "cp " + path + " " PROJECT_HEAD "/KeyboardList.txt";
+    system(command.c_str());
+
+    file.open(PROJECT_HEAD "/KeyboardList.txt");
+
+    if (!file) {
+        throw std::runtime_error("File couldn't be opened");
+    }
 
     std::string line;
 
     std::regex kb_desc(R"(^\s{2}([a-zA-Z]+)\s+(.+)$)");
     while(std::getline(file, line)) {
+        std::cout << "keyboard stuff\n";
         if (line == "! layout") {
             reachedLayouts = true;
             continue;
@@ -98,6 +109,9 @@ void Backend::retrieveKbLayouts(Cycle& masterCycle, std::string path) {
                 Keyboard* kb = new Keyboard();
                 kb->setAbbrev(QString::fromStdString(abbrev));
                 kb->setFull(QString::fromStdString(full));
+
+
+                std::cout << abbrev << ": " << full << "\n";
 
                 masterCycle.addKb(kb);
             }
